@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
 @RequestMapping("/api")
@@ -17,6 +16,19 @@ public class BankController {
     @PostMapping("/CreateBankAccount")
     public String saveBankAccount(@RequestBody BankModel bankModel) throws ExecutionException, InterruptedException {
         return bankingService.SaveBankAccount(bankModel);
+    }
+
+    @GetMapping("/GetAccountAmount")
+    public BankModel getAccountAmount(@RequestParam String currency) throws ExecutionException, InterruptedException {
+        return bankingService.getAccountAmount(currency);
+    }
+    @PutMapping("/DepositMoney")
+    public String depositMoney(@RequestBody BankModel bankModel) throws ExecutionException, InterruptedException {
+        return bankingService.updateAccountAmount(bankModel);
+    }
+    @DeleteMapping("/DeleteAccount")
+    public String deleteAccount(@RequestParam String currency) throws ExecutionException, InterruptedException {
+        return bankingService.deleteBankAccount(currency);
     }
 
 

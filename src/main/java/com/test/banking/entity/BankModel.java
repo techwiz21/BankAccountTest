@@ -3,12 +3,13 @@ public class BankModel {
     private String currency;
     private double amount;
 
-    public BankModel(Long id, String currency, double amount) {
+    public BankModel(String currency, double amount) {
         super();
         this.currency = currency;
         this.amount = amount;
     }
 
+    public BankModel(){}
 
     public String getCurrency() {
         return currency;
@@ -16,10 +17,6 @@ public class BankModel {
 
     public double getAmount() {
         return amount;
-    }
-
-    public void setCurrency(String currency) {
-        this.currency = currency;
     }
 
     public void setAmount(double amount) {
