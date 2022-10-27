@@ -15,12 +15,20 @@ import java.util.concurrent.ExecutionException;
 public class BankingService {
 
     private static final String COLLECTION_NAME="accounts";
-    public String SaveBankAccount(BankModel bankModel) throws ExecutionException, InterruptedException {
+    public String createBankAccount(BankModel bankModel) throws ExecutionException, InterruptedException {
 
-      Firestore dbFirestore=  FirestoreClient.getFirestore();
+        Firestore dbFirestore=  FirestoreClient.getFirestore();
+        DocumentReference documentReference =dbFirestore.collection(COLLECTION_NAME).document(bankModel.getCurrency());
 
-     ApiFuture<WriteResult> collectionApiFuture= dbFirestore.collection(COLLECTION_NAME).document(bankModel.getCurrency()).set(bankModel);
-        return collectionApiFuture.get().getUpdateTime().toString();
+        ApiFuture<DocumentSnapshot> future=documentReference.get();
+
+        DocumentSnapshot document =future.get();
+        if(document.exists()) {
+            return "Account with that currency already exists";
+        }else{
+            ApiFuture<WriteResult> collectionApiFuture= dbFirestore.collection(COLLECTION_NAME).document(bankModel.getCurrency()).set(bankModel);
+            return "Successfully Created an account";
+        }
     }
     public BankModel getAccountAmount(String currency) throws ExecutionException, InterruptedException {
 

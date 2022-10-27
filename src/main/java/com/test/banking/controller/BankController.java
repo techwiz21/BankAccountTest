@@ -14,8 +14,8 @@ public class BankController {
     @Autowired
     private BankingService bankingService;
     @PostMapping("/CreateBankAccount")
-    public String saveBankAccount(@RequestBody BankModel bankModel) throws ExecutionException, InterruptedException {
-        return bankingService.SaveBankAccount(bankModel);
+    public String createBankAccount(@RequestBody BankModel bankModel) throws ExecutionException, InterruptedException {
+        return bankingService.createBankAccount(bankModel);
     }
 
     @GetMapping("/GetAccountAmount")
