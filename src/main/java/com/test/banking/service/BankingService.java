@@ -13,8 +13,10 @@ import java.util.concurrent.ExecutionException;
 
 @Service
 public class BankingService {
-
+    //Defining Variables
     private static final String COLLECTION_NAME="accounts";
+
+    //Creating a bank account
     public String createBankAccount(BankModel bankModel) throws ExecutionException, InterruptedException {
 
         Firestore dbFirestore=  FirestoreClient.getFirestore();
@@ -23,6 +25,7 @@ public class BankingService {
         ApiFuture<DocumentSnapshot> future=documentReference.get();
 
         DocumentSnapshot document =future.get();
+        //Checking if bank account already exists
         if(document.exists()) {
             return "Account with that currency already exists";
         }else{
@@ -30,6 +33,7 @@ public class BankingService {
             return "Successfully Created an account";
         }
     }
+    //Getting total money in bank account
     public BankModel getAccountAmount(String currency) throws ExecutionException, InterruptedException {
 
         Firestore dbFirestore=  FirestoreClient.getFirestore();
@@ -39,7 +43,7 @@ public class BankingService {
     ApiFuture<DocumentSnapshot> future=documentReference.get();
 
     DocumentSnapshot document =future.get();
-
+    //Checking if Bank Account exists
     if(document.exists()){
         return document.toObject(BankModel.class);
     }else{
@@ -47,6 +51,7 @@ public class BankingService {
         }
     }
 
+    //Updating Account Money
     public String updateAccountAmount(BankModel bankModel) throws ExecutionException,InterruptedException{
         Firestore dbFirestore=  FirestoreClient.getFirestore();
 
@@ -56,8 +61,10 @@ public class BankingService {
 
         DocumentSnapshot document =future.get();
         BankModel bankModelServer=null;
+        //Checking if bank acccount exists
         if(document.exists()) {
             bankModelServer = document.toObject(BankModel.class);
+            //Adding the two amounts together
             bankModelServer.setAmount(bankModel.getAmount()+bankModelServer.getAmount());
             ApiFuture<WriteResult> collectionApiFuture= dbFirestore.collection(COLLECTION_NAME).document(bankModel.getCurrency()).set(bankModelServer);
             return collectionApiFuture.get().getUpdateTime().toString();
@@ -67,6 +74,7 @@ public class BankingService {
         }
 
     }
+    //Deleting the Bank Account
     public String deleteBankAccount(String currency) throws ExecutionException, InterruptedException {
 
         Firestore dbFirestore=  FirestoreClient.getFirestore();
@@ -75,6 +83,7 @@ public class BankingService {
         ApiFuture<DocumentSnapshot> future=documentReference.get();
 
         DocumentSnapshot document =future.get();
+        //Checking if Bank Account exists
         if(document.exists()) {
             ApiFuture<WriteResult> collectionApiFuture = dbFirestore.collection(COLLECTION_NAME).document(currency).delete();
             return "Successfully Deleted account with currency " + currency;
